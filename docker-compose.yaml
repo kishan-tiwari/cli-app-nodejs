@@ -1,0 +1,36 @@
+version: '3.5'
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: on-failure
+    ports:
+      - '80:80'
+    volumes:
+      - './nginx-conf:/etc/nginx/conf.d'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    networks:
+      - back-net
+
+  cli-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: cli-app:v1-latest
+    container_name: cli-app
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    networks:
+      - back-net
+
+networks:
+  back-net:
+    name: back-net
